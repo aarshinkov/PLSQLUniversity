@@ -1,0 +1,17 @@
+INSERT INTO DEPARTMENTS
+VALUES (1, 'Board of Directors');
+
+INSERT INTO DEPARTMENTS
+VALUES (2, 'Administration');
+
+INSERT INTO DEPARTMENTS
+VALUES (3, 'Operations');
+
+INSERT INTO DEPARTMENTS
+VALUES (4, 'Credit analysis');
+
+INSERT INTO DEPARTMENTS
+VALUES (5, 'Human resources');
+
+INSERT INTO DEPARTMENTS
+VALUES (6, 'IT department');

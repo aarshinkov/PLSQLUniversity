@@ -1,0 +1,85 @@
+CREATE OR REPLACE PACKAGE PK_SERVING IS
+
+  PROCEDURE sell_product(ip_branch_id IN NUMBER,
+                         ip_prod_id   IN NUMBER,
+                         ip_quant     IN NUMBER);
+
+END PK_SERVING;
+/
+CREATE OR REPLACE PACKAGE BODY PK_SERVING IS
+  PROCEDURE sell_product(ip_branch_id IN NUMBER,
+                         ip_prod_id   IN NUMBER,
+                         ip_quant     IN NUMBER) IS
+    v_is_in_stock    NUMBER;
+    v_avail_quantity NUMBER := 0;
+    v_product_price  NUMBER;
+    v_price          NUMBER;
+    v_cash_balance   NUMBER;
+  BEGIN
+    IF ip_quant <= 0 THEN
+      dbms_output.put_line('Error - client require 0 or negative products');
+      INSERT INTO error_registry
+      VALUES
+        (seq_errors.nextval, 'ERR_INV_PROD_QUANT', SYSDATE);
+      RETURN;
+    END IF;
+  
+    SELECT COUNT(*)
+    INTO   v_is_in_stock
+    FROM   branch_products
+    WHERE  branch_id = ip_branch_id
+    AND    prod_id = ip_prod_id;
+  
+    IF v_is_in_stock = 0 THEN
+      dbms_output.put_line('No available products found');
+      INSERT INTO error_registry
+      VALUES
+        (seq_errors.nextval, 'ERR_NO_AVAIL_PROD', SYSDATE);
+      RETURN;
+    END IF;
+  
+    SELECT avail_quant
+    INTO   v_avail_quantity
+    FROM   branch_products
+    WHERE  branch_id = ip_branch_id
+    AND    prod_id = ip_prod_id;
+  
+    dbms_output.put_line(v_avail_quantity);
+  
+    IF ip_quant > v_avail_quantity THEN
+      dbms_output.put_line('Inserting into error registry - you require more that the available products');
+      INSERT INTO error_registry
+      VALUES
+        (seq_errors.nextval, 'ERR_INSUFF_PRODUCTS', SYSDATE);
+      RETURN;
+    END IF;
+  
+    SELECT p.price
+    INTO   v_product_price
+    FROM   branch_products bp
+    JOIN   products p ON bp.prod_id = p.prod_id
+    WHERE  p.prod_id = ip_prod_id
+    AND    bp.branch_id = ip_branch_id;
+  
+    v_price := v_product_price * ip_quant;
+  
+    SELECT balance
+    INTO   v_cash_balance
+    FROM   cash_desks
+    WHERE  branch_id = ip_branch_id;
+  
+    v_cash_balance := v_cash_balance + v_price;
+  
+    UPDATE cash_desks
+    SET    balance = v_cash_balance
+    WHERE  branch_id = ip_branch_id;
+  
+    v_avail_quantity := v_avail_quantity - ip_quant;
+  
+    UPDATE branch_products
+    SET    avail_quant = v_avail_quantity;
+  
+  END sell_product;
+
+END PK_SERVING;
+/

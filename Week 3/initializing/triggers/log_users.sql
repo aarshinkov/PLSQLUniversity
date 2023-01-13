@@ -1,0 +1,17 @@
+CREATE OR REPLACE TRIGGER log_users
+  AFTER INSERT OR UPDATE ON users
+  FOR EACH ROW
+DECLARE
+BEGIN
+  IF INSERTING THEN
+    INSERT INTO log
+    VALUES
+      (seq_logs.nextval, 'INS_USER', SYSDATE);
+  
+  ELSIF UPDATING THEN
+    INSERT INTO log
+    VALUES
+      (seq_logs.nextval, 'UPD_USER', SYSDATE);
+  
+  END IF;
+END log_users;

@@ -1,0 +1,13 @@
+INSERT INTO products VALUES (1, 'Burger', 4, SYSDATE);
+INSERT INTO products VALUES (2, 'Spaghetti', 6.50, SYSDATE);
+INSERT INTO products VALUES (3, 'Pizza', 2, SYSDATE);
+INSERT INTO products VALUES (4, 'Shopska salad', 4.50, SYSDATE);
+INSERT INTO products VALUES (5, 'Steak', 6, SYSDATE);
+INSERT INTO products VALUES (6, 'Pancake', 2.30, SYSDATE);
+INSERT INTO products VALUES (7, 'Chicken soup', 2.60, SYSDATE);
+INSERT INTO products VALUES (8, 'Salmon', 4.80, SYSDATE);
+INSERT INTO products VALUES (9, 'French fries', 2.80, SYSDATE);
+INSERT INTO products VALUES (10, 'Meatball', 1.80, SYSDATE);
+INSERT INTO products VALUES (11, 'Lamb', 10, SYSDATE);
+INSERT INTO products VALUES (12, 'Turkey', 12, SYSDATE);
+INSERT INTO products VALUES (13, 'Trout', 8, SYSDATE);
